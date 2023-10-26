@@ -173,3 +173,5 @@ jsonfile.writeFile(FILE_PATH, data, (err) => {
             });
     }
 });
+
+console.log(data)
