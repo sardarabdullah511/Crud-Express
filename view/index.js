@@ -1,70 +1,44 @@
 const express = require("express");
-const mongodb = require("mongodb");
+const mongoose = require("mongoose");
 
 const app = express();
 app.use(express.json());
 
-const connectionUrl = "mongodb://localhost:27017";
-const client = new mongodb.MongoClient(connectionUrl);
+const connectionUrl = "mongodb://localhost:27017/schoolDb";
+mongoose.connect(connectionUrl).then(()=>
 
-client
-  .connect()
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((error) => console.log(error));
-
-const db = client.db("schoolDb");
-const student = db.collection("student");
-app.post("/student", (req, res, next) => {
-    const {name,email,age, dept}=req.body;
-  student
-    .insertOne({
-      name: name,
-      email: email,
-      age: age,
-      dept: dept,
-    })
-    .then(() => res.status(201).send("student add successfull"))
-    .catch((error) => res.status(500).send(error.message));
-});
+    console.log("connected to MongoDB"))
+    .catch((err)=> console.log(err));
 
 
-//get student
-app.get("/student", (req, res, next) => {
-  const {name}= req.query
-    student
-  .findOne({name:name})
-  .then((data) => res.send(data))
-  .catch((error)=> res.send(error.message));
-  });
 
-
-// update student 
-app.put("/student",(req,res,next)=>{
-    const {email}= req.query;
-    const {name}= req.body;
-    student.findOneAndUpdate({email},{$set:{name:name}})
-    .then((data)=>{
-        res.status(200).json({message:"student updated"});
-        })
-    .catch((error)=>{
-        res.status(500).json({message:error.message});
-        })
+const studentSchema = mongoose.Schema({
+    name: String,
+    email: String,
+    age:Number,
+    dept:String, 
 })
 
-// delet student 
-app.delete("/student",(req,res,next)=>{
-    const {email}= req.query;
-    student.findOneAndDelete({email:email})
-    .then((data)=>{
-        
-        res.status(200).json({message:"student deleted successfully"});
-        })
-    .catch((error)=>{
-        res.status(500).json({message:error.message});
-        })
+const Student = mongoose.model("student",studentSchema)
+
+
+//Add Student
+//Add Student
+//Add Student
+//Add Student
+//Add Student
+//Add Student
+//Add Student
+app.post("/student/single", async (req, res, next)=>{
+    try{const {name,email,age,dept}= req.body;
+const newStudent = new Student({
+    name,email,age,dept});
+await newStudent.save();
+res.status(200).json({message:"student added"});
+}catch(err){
+    res.status(500).json({message:err.message});
+    }
 })
-
-
 
 
 
