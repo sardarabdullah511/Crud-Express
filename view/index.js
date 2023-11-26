@@ -43,6 +43,21 @@ res.status(200).json({message:"student added"});
 
 
 
+//update data 
+
+app.put("/student/single",async (req,res, next)=>{
+    try{
+        const {email}= req.query;
+        const {dept}= req.body;
+await Student.findOneAndUpdate({email},{dept});
+res.status(200).json({message:"data updated"});
+    } catch (error){
+        res.status(400).json({message: error.message});
+
+    }
+});
+
+
 const errorMiddleware = (error, req, res, next) => {
   res.status(500).send(error.message);
 };
