@@ -77,6 +77,22 @@ res.status(200).json({message:"data updated"});
 
 
 
+//getting student record
+
+app.get("/student/single/:studentId",async (req,res, next)=>{
+    try{
+        const {studentId}= req.params;
+
+        const student = await Student.findById(studentId);
+res.status(200).json({data: student});
+    } catch (error){
+        res.status(400).json({message: error.message});
+
+    }
+});
+
+
+
 
 
 
