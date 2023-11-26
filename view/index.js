@@ -76,6 +76,25 @@ res.status(200).json({message:"data updated"});
 });
 
 
+
+
+
+
+app.get("/student/single",async (req,res, next)=>{
+    try{
+        const {email}= req.query;
+
+        const student = await Student.findOne({email});
+       if(!student) return res.status(400).json({message:'Student not found'});
+
+res.status(200).json({data: student});
+    } catch (error){
+        res.status(400).json({message: error.message});
+
+    }
+});
+
+
 const errorMiddleware = (error, req, res, next) => {
   res.status(500).send(error.message);
 };
