@@ -58,6 +58,24 @@ res.status(200).json({message:"data updated"});
 });
 
 
+
+
+app.put("/student/single/:id",async (req,res, next)=>{
+    try{
+        const {id}= req.params;
+        const {dept}= req.body;
+
+        const student = await Student.findById(id);
+        student.dept = dept;
+        await student.save();
+res.status(200).json({message:"data updated"});
+    } catch (error){
+        res.status(400).json({message: error.message});
+
+    }
+});
+
+
 const errorMiddleware = (error, req, res, next) => {
   res.status(500).send(error.message);
 };
