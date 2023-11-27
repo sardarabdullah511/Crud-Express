@@ -92,6 +92,19 @@ res.status(200).json({data: student});
 });
 
 
+//getting multiple student record
+
+app.get("/student/multiple",async (req,res, next)=>{
+    try{
+        const {dept}= req.query;
+
+        const students = await Student.find({dept});
+res.status(200).json({data: students});
+    } catch (error){
+        res.status(400).json({message: error.message});
+
+    }
+});
 
 
 
@@ -109,6 +122,48 @@ res.status(200).json({data: student});
 
     }
 });
+
+
+app.delete("/student/single",async (req,res, next)=>{
+    try{
+        const {email}= req.query;
+
+      const student= await Student.findOneAndDelete({email});
+      if(!student) return res.status(400).json({message:'Student not found'});
+
+
+res.status(200).json({message:"student deleted successfuly"});
+    } catch (error){
+        res.status(400).json({message: error.message});
+
+    }
+});
+
+
+
+
+app.delete("/student/single/:id", async (req, res, next) => {
+    try {
+      const { id } = req.params;
+  
+      const student = await Student.findById(id);
+  
+      if (!student) {
+        return res.status(404).json({ message: "Student not found" });
+      }
+  
+      const deletedStudent = await Student.findByIdAndDelete(id);
+  
+      if (!deletedStudent) {
+        return res.status(500).json({ message: "Failed to delete student" });
+      }
+  
+      res.status(200).json({ message: "Student deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
 
 
 const errorMiddleware = (error, req, res, next) => {
